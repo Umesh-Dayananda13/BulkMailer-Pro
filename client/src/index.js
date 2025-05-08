@@ -6,15 +6,14 @@ import { motion } from "framer-motion";
 import Swal from "sweetalert2";
 import {
   FiUploadCloud,
-  FiMail,
   FiSend,
   FiCheckCircle,
   FiEye,
   FiTrash2,
+  FiPlus,
 } from "react-icons/fi";
 import "./App.css";
 
-// Loading Spinner Component
 const LoadingSpinner = () => (
   <div className="spinner">
     <div className="double-bounce1"></div>
@@ -24,6 +23,7 @@ const LoadingSpinner = () => (
 
 function App() {
   const [emails, setEmails] = useState([]);
+  const [emailInput, setEmailInput] = useState("");
   const [subject, setSubject] = useState("");
   const [message, setMessage] = useState("");
   const [isSending, setIsSending] = useState(false);
@@ -33,9 +33,10 @@ function App() {
   const handleFileUpload = (e) => {
     const file = e.target.files[0];
     if (!file) return;
-
-    // Check file format
-    if (file.type !== 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet') {
+    if (
+      file.type !==
+      "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    ) {
       Swal.fire({
         icon: "error",
         title: "Invalid File",
@@ -44,7 +45,6 @@ function App() {
       });
       return;
     }
-
     setSelectedFile(file);
     const reader = new FileReader();
     reader.onload = (evt) => {
@@ -53,12 +53,10 @@ function App() {
       const wsname = wb.SheetNames[0];
       const ws = wb.Sheets[wsname];
       const data = XLSX.utils.sheet_to_json(ws, { header: 1 });
-
       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      const extractedEmails = data.flat().filter(
-        (cell) => typeof cell === "string" && emailRegex.test(cell.trim())
-      );
-      
+      const extractedEmails = data
+        .flat()
+        .filter((cell) => typeof cell === "string" && emailRegex.test(cell.trim()));
       if (extractedEmails.length === 0) {
         Swal.fire({
           icon: "warning",
@@ -68,8 +66,7 @@ function App() {
         });
         return;
       }
-
-      setEmails([...new Set(extractedEmails)]);
+      setEmails([...new Set([...emails, ...extractedEmails])]);
     };
     reader.readAsBinaryString(file);
   };
@@ -87,11 +84,7 @@ function App() {
     setIsSending(true);
     try {
       const apiUrl = process.env.REACT_APP_API_URL;
-      await axios.post(`${apiUrl}/send-mails`, {
-        emails,
-        subject,
-        message,
-      });
+      await axios.post(`${apiUrl}/send-mails`, { emails, subject, message });
       Swal.fire({
         icon: "success",
         title: "Success",
@@ -112,12 +105,28 @@ function App() {
     }
   };
 
+  const handleAddEmail = () => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (emailRegex.test(emailInput.trim())) {
+      setEmails((prev) => [...new Set([...prev, emailInput.trim()])]);
+      setEmailInput("");
+    } else {
+      Swal.fire({
+        icon: "error",
+        title: "Invalid Email",
+        text: "Please enter a valid email address.",
+        confirmButtonColor: "#ff4d4d",
+      });
+    }
+  };
+
   const handleClear = () => {
     setEmails([]);
     setSubject("");
     setMessage("");
     setSelectedFile(null);
     setPreviewMode(false);
+    setEmailInput("");
   };
 
   return (
@@ -141,6 +150,18 @@ function App() {
         <div className="input-group">
           <input
             type="text"
+            placeholder="Add email manually"
+            value={emailInput}
+            onChange={(e) => setEmailInput(e.target.value)}
+          />
+          <button onClick={handleAddEmail} className="preview-btn">
+            <FiPlus /> Add
+          </button>
+        </div>
+
+        <div className="input-group">
+          <input
+            type="text"
             placeholder="Subject"
             value={subject}
             onChange={(e) => setSubject(e.target.value)}
@@ -158,16 +179,13 @@ function App() {
 
         <div className="button-group">
           <button className="send-btn" onClick={handleSend} disabled={isSending}>
-            {isSending ? <LoadingSpinner /> : <FiSend />} 
+            {isSending ? <LoadingSpinner /> : <FiSend />}
             {isSending ? "Sending..." : "Send Emails"}
           </button>
           <button className="clear-btn" onClick={handleClear}>
             <FiTrash2 /> Clear
           </button>
-          <button
-            className="preview-btn"
-            onClick={() => setPreviewMode((p) => !p)}
-          >
+          <button className="preview-btn" onClick={() => setPreviewMode((p) => !p)}>
             <FiEye /> Preview
           </button>
         </div>
