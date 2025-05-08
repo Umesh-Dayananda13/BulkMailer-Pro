@@ -26,21 +26,31 @@ body {
 }
 
 @keyframes floatCard {
-  0% { transform: translateY(0px); }
-  50% { transform: translateY(-10px); }
-  100% { transform: translateY(0px); }
+  0% {
+    transform: translateY(0px);
+  }
+
+  50% {
+    transform: translateY(-10px);
+  }
+
+  100% {
+    transform: translateY(0px);
+  }
 }
 
 h1 {
   font-size: 3rem;
   background: linear-gradient(45deg, #0ff, #f0f);
   -webkit-background-clip: text;
+  background-clip: text;
   -webkit-text-fill-color: transparent;
   text-align: center;
   margin-bottom: 2rem;
 }
 
-input, textarea {
+input,
+textarea {
   background: rgba(255, 255, 255, 0.08);
   border: none;
   color: white;
@@ -52,7 +62,8 @@ input, textarea {
   transition: all 0.3s ease;
 }
 
-input:focus, textarea:focus {
+input:focus,
+textarea:focus {
   outline: none;
   box-shadow: 0 0 0 2px #00ffff66;
 }
@@ -78,6 +89,7 @@ button {
 .send-btn {
   background: linear-gradient(to right, #00c9ff, #92fe9d);
 }
+
 .send-btn:hover {
   box-shadow: 0 0 20px #00ffdd;
 }
@@ -85,6 +97,7 @@ button {
 .clear-btn {
   background: linear-gradient(to right, #ff416c, #ff4b2b);
 }
+
 .clear-btn:hover {
   box-shadow: 0 0 20px #ff4d4d;
 }
@@ -93,6 +106,7 @@ button {
   background: linear-gradient(to right, #f7971e, #ffd200);
   color: black;
 }
+
 .preview-btn:hover {
   box-shadow: 0 0 20px #ffdc73;
 }
@@ -123,6 +137,7 @@ button {
 .list-container::-webkit-scrollbar {
   width: 6px;
 }
+
 .list-container::-webkit-scrollbar-thumb {
   background: #00ffff;
   border-radius: 10px;
@@ -134,4 +149,24 @@ button {
   padding: 1rem;
   border-radius: 12px;
   border-left: 4px solid #ffc107;
+}
+
+@media screen and (max-width: 600px) {
+  #upload-section {
+    display: flex;
+    justify-content: center;
+  }
+
+  .upload-content {
+    display: flex;
+
+    justify-content: center;
+  }
+  .input-group {
+    display: flex;
+    justify-content: center;
+    gap: 5px;
+    margin: 10px;
+  }
+
 }

@@ -134,7 +134,7 @@ function App() {
       <div className="card">
         <h1>BulkMailer Pro</h1>
 
-        <div className="upload-section">
+        <div className="upload-section"id="upload-section" >
           <label className="file-upload">
             <input type="file" onChange={handleFileUpload} />
             <div className="upload-content">
@@ -147,7 +147,7 @@ function App() {
           </label>
         </div>
 
-        <div className="input-group">
+        <div className="input-group" >
           <input
             type="text"
             placeholder="Add email manually"
