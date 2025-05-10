@@ -132,7 +132,8 @@ function App() {
   return (
     <div className="container">
       <div className="card">
-        <h1>BulkMailer Pro</h1>
+        <h1>BulkMailer Pro </h1>
+        <h2 style={{textAlign: "center", color: "skyblue",}}>&rarr;&reg;UMESH&trade;</h2>
 
         <div className="upload-section"id="upload-section" >
           <label className="file-upload">
